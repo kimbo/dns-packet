@@ -761,6 +761,14 @@ roption.decode = function (buf, offset) {
       buf.copy(padded, 0, offset, offset + len - 4)
       option.ip = ip.toString(padded)
       break
+    case 10: // COOKIE
+      option.clientCookie = Buffer.alloc(8)
+      buf.copy(option.clientCookie, 0, 0, offset)
+      if (len > 8) {
+        option.serverCookie = Buffer.alloc(len - 8)
+        buf.copy(option.serverCookie, 0, offset + 8, offset + (len - 8))
+      }
+      break
     // case 12: Padding.  No decode makes sense.
     case 11: // KEEP-ALIVE
       if (len > 0) {
